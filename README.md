@@ -1,4 +1,4 @@
-# ansible-role-consul
+# ansible-role-consul [![Build Status](https://travis-ci.org/izumimatsuo/ansible-role-consul.svg?branch=master)](https://travis-ci.org/izumimatsuo/ansible-role-consul)
 
 CentOS 7 に consul を導入する ansible role です。
 
