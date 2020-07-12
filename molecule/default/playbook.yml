@@ -1,0 +1,19 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    test_skip: true
+  pre_tasks:
+  - name: get host ip
+    shell: docker inspect --format \{\{.NetworkSettings.IPAddress\}\} instance
+    delegate_to: localhost
+    register: instance_ip
+    changed_when: false
+    check_mode: no
+  - name: set fact
+    set_fact:
+      consul_bind_ipaddr: "{{ instance_ip.stdout }}"
+    changed_when: false
+    check_mode: no
+  roles:
+    - role: ansible-role-consul

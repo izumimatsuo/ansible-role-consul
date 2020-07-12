@@ -1,0 +1,105 @@
+---
+# tasks file for ansible-role-consul
+- name: install unzip for unarchive module
+  yum:
+    name:
+      - unzip
+  tags: consul
+
+- name: detect consul is installed
+  stat:
+    path: /usr/local/bin/consul
+  register: consul_bin
+  tags: consul
+
+- block:
+  - name: download consul {{ CONSUL_VERSION }}
+    unarchive:
+      src: https://releases.hashicorp.com/consul/{{ CONSUL_VERSION }}/consul_{{ CONSUL_VERSION }}_linux_amd64.zip
+      dest: /tmp
+      remote_src: yes
+  - name: install consul
+    command: mv /tmp/consul /usr/local/bin/consul
+  when: not consul_bin.stat.exists
+  tags: consul
+
+- name: create consul conf directory
+  file:
+    path: /etc/consul.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  tags: consul
+
+- name: copy consul environment file
+  template:
+    src: consul.j2
+    dest: /etc/sysconfig/consul
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart consul service
+  tags: consul
+
+- name: copy consul service file
+  template:
+    src: consul.service.j2
+    dest: /etc/systemd/system/consul.service
+    owner: root
+    group: root
+    mode: '0644'
+  tags: consul
+
+- name: daemon-reload
+  systemd: daemon_reload=yes
+  tags: consul
+
+- name: start consul service
+  service:
+    name: consul
+    state: started
+    enabled: yes
+  tags: consul
+
+- name: install dnsmasq
+  yum:
+    name:
+      - dnsmasq
+  when: enable_dnsmasq
+  tags: consul
+
+- name: copy dnsmasq conf
+  template:
+    src: dnsmasq.conf.j2
+    dest: /etc/dnsmasq.d/default.conf
+    owner: root
+    group: root
+    mode: '0644'
+  when: enable_dnsmasq
+  tags: consul
+
+- name: start dnsmasq service
+  service:
+    name: dnsmasq
+    state: started
+    enabled: yes
+  when: enable_dnsmasq
+  tags: consul
+
+- name: replace resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: '0644'
+  when: enable_dnsmasq and test_skip is undefined
+  tags: consul
+
+- name: forbid overwriting resolv.conf
+  lineinfile:
+    dest: /etc/NetworkManager/NetworkManager.conf
+    line: 'dns=none'
+  when: enable_dnsmasq and test_skip is undefined
+  tags: consul
