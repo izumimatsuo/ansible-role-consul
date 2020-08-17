@@ -1,6 +1,6 @@
 ---
 # defaults file for ansible-role-consul
-consul_is_server: true
+consul_is_server: no
 consul_bootstrap_expect: 1
 consul_bind_ipaddr:
 consul_join_ipaddr:

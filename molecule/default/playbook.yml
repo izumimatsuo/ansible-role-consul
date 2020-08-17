@@ -2,6 +2,7 @@
 - name: Converge
   hosts: all
   vars:
+    consul_is_server: yes
     test_skip: true
   pre_tasks:
   - name: get host ip

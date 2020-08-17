@@ -8,7 +8,7 @@ CentOS 7 に consul を導入する ansible role です。
 
 | 項目名             | デフォルト値| 説明               |
 | ------------------ | ----------- | ------------------ |
-| consul_is_server   | true        | serverとして起動   |
+| consul_is_server   | no          | serverとして起動   |
 | consul_bootstrap_expect | 1      | leaderを決定する数 |
 | consul_bind_ipaddr | none        | bindするIP         |
 | consul_join_ipaddr | none        | joinするIP         |
