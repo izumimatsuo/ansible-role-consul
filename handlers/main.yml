@@ -5,3 +5,9 @@
     name: consul
     state: restarted
   tags: consul
+
+- name: restart networkmanager service
+  service:
+    name: NetworkManager
+    state: restarted
+  tags: consul

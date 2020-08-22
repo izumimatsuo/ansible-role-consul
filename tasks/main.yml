@@ -18,6 +18,9 @@
       src: https://releases.hashicorp.com/consul/{{ CONSUL_VERSION }}/consul_{{ CONSUL_VERSION }}_linux_amd64.zip
       dest: /tmp
       remote_src: yes
+      owner: root
+      group: root
+      mode: '0755'
   - name: install consul
     command: mv /tmp/consul /usr/local/bin/consul
   when: not consul_bin.stat.exists
@@ -100,6 +103,12 @@
 - name: forbid overwriting resolv.conf
   lineinfile:
     dest: /etc/NetworkManager/NetworkManager.conf
+    regexp: '^dns='
+    insertafter: '^\[main\]'
     line: 'dns=none'
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart networkmanager service
   when: enable_dnsmasq and test_skip is undefined
   tags: consul
