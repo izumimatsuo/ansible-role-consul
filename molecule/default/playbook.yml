@@ -13,6 +13,7 @@
     check_mode: no
   - name: set fact
     set_fact:
+      consul_join_ipaddr: "{{ instance_ip.stdout }}"
       consul_bind_ipaddr: "{{ instance_ip.stdout }}"
     changed_when: false
     check_mode: no
