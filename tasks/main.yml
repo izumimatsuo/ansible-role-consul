@@ -52,6 +52,7 @@
     owner: root
     group: root
     mode: '0644'
+  notify: restart consul service
   tags: consul
 
 - name: daemon-reload
@@ -63,6 +64,10 @@
     name: consul
     state: started
     enabled: yes
+  tags: consul
+
+- include_tasks: consul-template.yml
+  when: enable_consul_template
   tags: consul
 
 - name: install dnsmasq

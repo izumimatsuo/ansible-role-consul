@@ -1,0 +1,61 @@
+---
+# tasks file for ansible-role-consul
+- name: detect consul-template is installed
+  stat:
+    path: /usr/local/bin/consul-template
+  register: consul_template_bin
+  tags: consul
+
+- block:
+  - name: download consul-template {{ CONSUL_TEMPLATE_VERSION }}
+    unarchive:
+      src: https://releases.hashicorp.com/consul-template/{{ CONSUL_TEMPLATE_VERSION }}/consul-template_{{ CONSUL_TEMPLATE_VERSION }}_linux_amd64.zip
+      dest: /tmp
+      remote_src: yes
+      owner: root
+      group: root
+      mode: '0755'
+  - name: install consul-template
+    command: mv /tmp/consul-template /usr/local/bin/consul-template
+  when: not consul_template_bin.stat.exists
+  tags: consul
+
+- name: create consul-template conf directory
+  file:
+    path: /etc/consul-template.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  tags: consul
+
+- name: copy consul-template environment file
+  template:
+    src: consul-template.j2
+    dest: /etc/sysconfig/consul-template
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart consul-template service
+  tags: consul
+
+- name: copy consul-template service file
+  template:
+    src: consul-template.service.j2
+    dest: /etc/systemd/system/consul-template.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart consul-template service
+  tags: consul
+
+- name: daemon-reload
+  systemd: daemon_reload=yes
+  tags: consul
+
+- name: start consul-template service
+  service:
+    name: consul-template
+    state: started
+    enabled: yes
+  tags: consul
