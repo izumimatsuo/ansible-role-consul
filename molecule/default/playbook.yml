@@ -3,6 +3,7 @@
   hosts: all
   vars:
     consul_is_server: yes
+    consul_use_template: yes
     test_skip: true
   pre_tasks:
   - name: get host ip

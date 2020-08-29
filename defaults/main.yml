@@ -4,4 +4,5 @@ consul_is_server: no
 consul_bootstrap_expect: 3
 consul_bind_ipaddr:
 consul_join_ipaddr:
+consul_use_template: no
 enable_dnsmasq: yes

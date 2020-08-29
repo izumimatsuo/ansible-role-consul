@@ -1,3 +1,4 @@
 ---
 # vars file for ansible-role-consul
 CONSUL_VERSION: 1.8.0
+CONSUL_TEMPLATE_VERSION: 0.25.1

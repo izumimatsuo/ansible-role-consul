@@ -37,3 +37,13 @@ def test_dnsmasq_running_and_enabled(host):
 
 def test_dnsmasq_is_listen(host):
     assert host.socket('tcp://0.0.0.0:53').is_listening
+
+
+def test_consul_template_is_installed(host):
+    assert host.exists('consul-template')
+
+
+def test_consul_template_running_and_enabled(host):
+    service = host.service('consul-template')
+    assert service.is_running
+    assert service.is_enabled

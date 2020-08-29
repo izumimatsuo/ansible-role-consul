@@ -113,3 +113,7 @@
   notify: restart networkmanager service
   when: enable_dnsmasq and test_skip is undefined
   tags: consul
+
+- include_tasks: consul_template.yml
+  when: consul_use_template
+  tags: consul
