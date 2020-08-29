@@ -66,10 +66,6 @@
     enabled: yes
   tags: consul
 
-- include_tasks: consul-template.yml
-  when: enable_consul_template
-  tags: consul
-
 - name: install dnsmasq
   yum:
     name:
