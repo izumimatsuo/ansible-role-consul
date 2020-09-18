@@ -1,6 +1,6 @@
 GOMAXPROCS=2
 
-{% if consul_is_server is defined and consul_is_server %}
+{% if inventory_hostname in consul_server_hostnames %}
 OPTIONS="-server -bootstrap-expect {{ consul_bootstrap_expect }} -retry-join {{ consul_join_ipaddr }} -data-dir /tmp/consul -bind {{ consul_bind_ipaddr }} -enable-local-script-checks"
 {% else %}
 OPTIONS="-retry-join {{ consul_join_ipaddr }} -data-dir /tmp/consul -bind {{ consul_bind_ipaddr }} -enable-local-script-checks"

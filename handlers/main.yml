@@ -4,16 +4,13 @@
   service:
     name: consul
     state: restarted
-  tags: consul
 
 - name: restart consul-template service
   service:
     name: consul-template
     state: restarted
-  tags: consul
 
 - name: restart networkmanager service
   service:
     name: NetworkManager
     state: restarted
-  tags: consul

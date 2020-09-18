@@ -4,13 +4,11 @@
   yum:
     name:
       - unzip
-  tags: consul
 
 - name: detect consul is installed
   stat:
     path: /usr/local/bin/consul
   register: consul_bin
-  tags: consul
 
 - block:
   - name: download consul {{ CONSUL_VERSION }}
@@ -24,7 +22,6 @@
   - name: install consul
     command: mv /tmp/consul /usr/local/bin/consul
   when: not consul_bin.stat.exists
-  tags: consul
 
 - name: create consul conf directory
   file:
@@ -33,7 +30,6 @@
     owner: root
     group: root
     mode: '0755'
-  tags: consul
 
 - name: copy consul environment file
   template:
@@ -43,7 +39,6 @@
     group: root
     mode: '0644'
   notify: restart consul service
-  tags: consul
 
 - name: copy consul service file
   template:
@@ -53,25 +48,21 @@
     group: root
     mode: '0644'
   notify: restart consul service
-  tags: consul
 
 - name: daemon-reload
   systemd: daemon_reload=yes
-  tags: consul
 
 - name: start consul service
   service:
     name: consul
     state: started
     enabled: yes
-  tags: consul
 
 - name: install dnsmasq
   yum:
     name:
       - dnsmasq
   when: enable_dnsmasq
-  tags: consul
 
 - name: copy dnsmasq conf
   template:
@@ -81,7 +72,6 @@
     group: root
     mode: '0644'
   when: enable_dnsmasq
-  tags: consul
 
 - name: start dnsmasq service
   service:
@@ -89,7 +79,6 @@
     state: started
     enabled: yes
   when: enable_dnsmasq
-  tags: consul
 
 - name: replace resolv.conf
   template:
@@ -99,7 +88,6 @@
     group: root
     mode: '0644'
   when: enable_dnsmasq and test_skip is undefined
-  tags: consul
 
 - name: forbid overwriting resolv.conf
   lineinfile:
@@ -112,8 +100,6 @@
     mode: '0644'
   notify: restart networkmanager service
   when: enable_dnsmasq and test_skip is undefined
-  tags: consul
 
 - include_tasks: consul_template.yml
   when: consul_use_template
-  tags: consul

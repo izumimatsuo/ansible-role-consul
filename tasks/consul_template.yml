@@ -4,7 +4,6 @@
   stat:
     path: /usr/local/bin/consul-template
   register: consul_template_bin
-  tags: consul
 
 - block:
   - name: download consul-template {{ CONSUL_TEMPLATE_VERSION }}
@@ -18,7 +17,6 @@
   - name: install consul-template
     command: mv /tmp/consul-template /usr/local/bin/consul-template
   when: not consul_template_bin.stat.exists
-  tags: consul
 
 - name: create consul-template conf directory
   file:
@@ -27,7 +25,6 @@
     owner: root
     group: root
     mode: '0755'
-  tags: consul
 
 - name: copy consul-template environment file
   template:
@@ -37,7 +34,6 @@
     group: root
     mode: '0644'
   notify: restart consul-template service
-  tags: consul
 
 - name: copy consul-template service file
   template:
@@ -47,15 +43,12 @@
     group: root
     mode: '0644'
   notify: restart consul-template service
-  tags: consul
 
 - name: daemon-reload
   systemd: daemon_reload=yes
-  tags: consul-template
 
 - name: start consul-template service
   service:
     name: consul-template
     state: started
     enabled: yes
-  tags: consul

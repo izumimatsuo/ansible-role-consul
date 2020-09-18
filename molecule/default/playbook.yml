@@ -2,7 +2,7 @@
 - name: Converge
   hosts: all
   vars:
-    consul_is_server: yes
+    consul_server_hostnames: ['instance']
     consul_use_template: yes
     test_skip: true
   pre_tasks:
